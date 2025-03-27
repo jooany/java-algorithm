@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 
-class DepthFindSearch {
+class DepthFirstSearch {
     private static String[] solution() {
         int n = 6;
 //        String[][] graph = new String[][]{{"1", "2"}, {"2", "3"}, {"3", "4"}, {"4", "5"}};
