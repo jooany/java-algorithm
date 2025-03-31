@@ -23,6 +23,10 @@ class Solution {
 
         while (!queue.isEmpty()) {
             Node curr = queue.poll();
+            
+            if (curr.x == n - 1 && curr.y == n - 1) {
+                break;
+            }
 
             for (int i = 0; i < 4; i++) {
                 int nx = curr.x + dx[i];
