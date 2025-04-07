@@ -3,26 +3,21 @@ import java.util.*;
 class Solution {
     
     public int[] solution(int[] array, int[][] commands) {
-        ArrayList<Integer> answer = new ArrayList<>();
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
         
-        for (int[] command : commands) {
+        int[] answer = new int[commands.length];
+        
+        for (int c = 0; c < commands.length; c++) {
+            int i = commands[c][0];
+            int j = commands[c][1];
+            int k = commands[c][2];
             
-            for (int i = command[0] - 1; i < command[1]; i++) {
-                pq.offer(array[i]);
-            }
+            int[] temp = Arrays.copyOfRange(array, i - 1, j);
             
-            for (int j = 1; j < command[2]; j++) {
-                pq.poll();
-            }
+            Arrays.sort(temp);
             
-            answer.add(pq.poll());
-            
-            pq.clear();
+            answer[c] = temp[k - 1];
         }
         
-        return answer.stream()
-            .mapToInt(Integer::intValue)
-            .toArray();
+        return answer;
     }
 }
