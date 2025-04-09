@@ -1,39 +1,30 @@
 import java.util.*;
-import java.util.stream.*;
 
 class Solution {
     public int[] solution(String s) {
-        List<List<Integer>> list = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
         
-        // 2/2,1/2,1,3 or 2,1,3
-        String s1 = s.replace("},", "/").replace("{", "").replace("}", "");
-        
-        String[] bundles = s1.split("/");
-        
-        for (String b : bundles) {
-            String[] numbers = b.split(",");
+        int n = s.length();
+        for (int i = 2; i < n; i++) {
+            char c = s.charAt(i); 
+            if (c == '{' || c == '}' || c == ',') continue;
             
-            list.add(
-                Arrays.stream(numbers)
-                    .map(Integer::parseInt)
-                    .collect(Collectors.toList())
-            );
-        }
-        
-        list.sort((o1, o2) -> o1.size() - o2.size());
-        
-        LinkedHashSet<Integer> set = new LinkedHashSet<>();
-        
-        for (List<Integer> l : list) {
-            for(Integer num : l) {
-                if (!set.contains(num)) {
-                    set.add(num);
-                }
+            int j;
+            for (j = i; j < n - 2; j++) {
+                char cc = s.charAt(j);
+                if (cc == ',' || cc == '}') break;
             }
+            
+            int k = Integer.parseInt(s.substring(i, j));
+            map.put(k, map.getOrDefault(k, 0) + 1);
+            
+            i = j;
         }
         
-        // LinkedHashSet -> int[]
-        return set.stream()
+        return map.entrySet()
+            .stream()
+            .sorted((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()))
+            .map(e -> e.getKey())
             .mapToInt(Integer::intValue)
             .toArray();
     }
