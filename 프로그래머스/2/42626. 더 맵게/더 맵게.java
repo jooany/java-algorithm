@@ -9,20 +9,12 @@ class Solution {
             pq.add(sv);
         }
         
-        while(pq.size() >= 2) {
-            if (pq.peek() >= K) {
-                return cnt;
-            }
-            
+        while(pq.size() >= 2 && pq.peek() < K) {
             pq.add(pq.poll() + pq.poll() * 2);
             
             cnt++;
         }
-        
-        if (pq.peek() >= K) {
-            return cnt;
-        }
 
-        return -1;
+        return pq.peek() >= K ? cnt : -1;
     }
 }
