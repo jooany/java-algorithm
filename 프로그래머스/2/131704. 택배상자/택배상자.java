@@ -17,7 +17,7 @@ class Solution {
             
             int target = order[i];
             
-            if ((mainContainer.isEmpty() || mainContainer.peek() > target)) {
+            if (mainContainer.isEmpty() || mainContainer.peek() > target) {
                 if (target != subContainer.pop()) break;
                 
                 cnt++;
