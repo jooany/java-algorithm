@@ -6,11 +6,9 @@ class Solution {
         char[] numbers = number.toCharArray();
 
         for (int i = 0; i < numbers.length; i++) {
-            if (!stack.isEmpty() && stack.peek() < numbers[i]) {
-                while(!stack.isEmpty() && k != 0 && stack.peek() < numbers[i]) {
-                    stack.pop();
-                    k--;
-                }
+            while(!stack.isEmpty() && k != 0 && stack.peek() < numbers[i]) {
+                stack.pop();
+                k--;
             }
             
             stack.push(numbers[i]);
@@ -22,10 +20,6 @@ class Solution {
             sb.append(stack.pollLast());
         }
         
-        if (k != 0) {
-            return sb.toString().substring(0, sb.length() - k);
-        }
-        
-        return sb.toString();
+        return k > 0 ? sb.substring(0, sb.length() - k) : sb.toString();
     }
 }
