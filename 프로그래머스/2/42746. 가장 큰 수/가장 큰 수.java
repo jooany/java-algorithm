@@ -1,17 +1,15 @@
 import java.util.*;
+import java.util.stream.*;
 
 class Solution {
     public String solution(int[] numbers) {
-        String answer = Arrays.stream(numbers)
-            .mapToObj(String::valueOf)
-            .sorted((a, b) -> (b + a).compareTo(a + b))
-            .reduce((a, b) -> a + b)
-            .orElse("0");
-        
-        if (answer.startsWith("0")) {
+        List<String> result = Arrays.stream(numbers).mapToObj(n -> String.valueOf(n)).collect(Collectors.toList());
+        Collections.sort(result, (s1, s2) -> (s2+s1).compareTo(s1+s2));
+
+        if(result.get(0).equals("0")) {
             return "0";
         }
-        
-        return answer;
+
+        return result.stream().collect(Collectors.joining());
     }
 }
