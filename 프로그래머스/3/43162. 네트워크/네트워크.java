@@ -1,16 +1,18 @@
 import java.util.*;
 
 class Solution {
-    private static int[][] computer;
-    private static boolean[] visit;
+    int cpuCnt;
+    boolean[] visited;
+    int[][] cpus;
     
     public int solution(int n, int[][] computers) {
         int answer = 0;
-        visit = new boolean[n];
-        computer = computers;
+        cpuCnt = n;
+        cpus = computers;
+        visited = new boolean[n];
         
         for (int i = 0; i < n; i++) {
-            if (!visit[i]) {
+            if (!visited[i]) {
                 dfs(i);
                 answer++;
             }
@@ -19,11 +21,11 @@ class Solution {
         return answer;
     }
     
-    private static void dfs(int index) {
-        visit[index] = true;
+    private void dfs(int index) {
+        visited[index] = true;
         
-        for (int i = 0; i < computer[index].length; i++) {
-            if (computer[index][i] == 1 && !visit[i]) {
+        for (int i = 0; i < cpuCnt; i++) {
+            if (!visited[i] && cpus[index][i] == 1) {
                 dfs(i);
             }
         }
