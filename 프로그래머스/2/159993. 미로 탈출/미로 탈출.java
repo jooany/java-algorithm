@@ -1,102 +1,87 @@
 import java.util.*;
 
 class Solution {
+    int[] dx = new int[]{1, 0, -1, 0};
+    int[] dy = new int[]{0, 1, 0, -1};
+    int m;
+    int n;
+    
     public int solution(String[] maps) {
-        int n = maps.length;
-        int m = maps[0].length();
+        int answer = 0;
+        m = maps.length;
+        n = maps[0].length();
+        int[][] dist = new int[m][n];
+        initDist(dist);
         
-        int[] dx = new int[]{0, 0, -1, 1};
-        int[] dy = new int[]{1, -1, 0, 0};
         
-        boolean[][] visited = new boolean[n][m];
-        Deque<Node> queue = new ArrayDeque<>();
-        
-        // 시작 노드 찾기
-        Node start = null;
-        
-        for (int i = 0; i < n; i++) {
-            if (maps[i].contains("S")) {
-                start = new Node(i, maps[i].indexOf('S'), 0, 'S');
-                break;
-            }
-        }
-        
+        int[] start = findIndex(maps, 'S');
+        Deque<int[]> queue = new ArrayDeque<>();
         queue.offer(start);
-        visited[start.x][start.y] = true;
-                
-        // 시작 -> 레버까지의 최단경로 찾기
-        Node lever = null;
-        while(!queue.isEmpty()) {
-            Node curr = queue.poll();
+        dist[start[0]][start[1]] = 0;
+        
             
-            if (curr.display == 'L') {
-                lever = curr;
-                queue.clear();
-                break;
-            }
+        // 시작 지점 -> 레버 까지의 최단 길이
+        int startToLever = bfs(maps, dist, queue, 'L');
+        if (startToLever == 0) return -1;
+        answer += startToLever;
+        
+        // 거리 배열 -1로 초기화
+        int[] lever = findIndex(maps, 'L');
+        initDist(dist);
+        dist[lever[0]][lever[1]] = 0;
+        
+        queue.clear();
+        queue.offer(lever);
             
-            for (int i = 0; i < dx.length; i++) {
-                int nx = curr.x + dx[i];
-                int ny = curr.y + dy[i];
-                
-                // 방문했거나 범위 밖이거나 벽인 경우 탐색하지 않는다.
-                if (nx < 0 || ny < 0 || nx >= n || ny >= m || visited[nx][ny] || maps[nx].charAt(ny) == 'X') {
-                    continue;
-                }
-                
-                queue.offer(new Node(nx, ny, curr.dist + 1, maps[nx].charAt(ny)));
-                visited[nx][ny] = true;
-            }
-        }
+        // 레버 -> 출구 까지의 최단 길이
+        int leverToExit = bfs(maps, dist, queue, 'E');
+        if (leverToExit == 0) return -1;
+        answer += leverToExit;
         
-        if (lever == null) {
-            return -1;
-        }
-        
-        for (int i = 0; i < n; i++) {
-            Arrays.fill(visited[i], false);
-        }
-        
-        queue.offer(new Node(lever.x, lever.y, lever.dist, lever.display));
-        visited[lever.x][lever.y] = true;
-        
-        Node exit = null;
-        // 레버 -> 출구까지의 최단경로 찾기
-        while(!queue.isEmpty()) {
-            Node curr = queue.poll();
-            
-            if (curr.display == 'E') {
-                exit = curr;
-                queue.clear();
-                break;
-            }
-            
-            for (int i = 0; i < dx.length; i++) {
-                int nx = curr.x + dx[i];
-                int ny = curr.y + dy[i];
-                
-                // 방문했거나 범위 밖이거나 벽인 경우 탐색하지 않는다.
-                if (nx < 0 || ny < 0 || nx >= n || ny >= m || visited[nx][ny] || maps[nx].charAt(ny) == 'X') {
-                    continue;
-                }
-                
-                queue.offer(new Node(nx, ny, curr.dist + 1, maps[nx].charAt(ny)));
-                visited[nx][ny] = true;
-            }
-        }
-        
-        return exit == null ? -1 : exit.dist;
+        return answer;
     }
     
-    private static class Node {
-        int x, y, dist;
-        char display;
+    private int[] findIndex(String[] maps, char target) {
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (maps[i].charAt(j) == target) {
+                    return new int[]{i, j};
+                }
+            }
+        }
         
-        Node (int x, int y, int dist, char display) {
-            this.x = x;
-            this.y = y;
-            this.dist = dist;
-            this.display = display;
+        return new int[]{};
+    }
+    
+    private int bfs(String[] maps, int[][] dist, Deque<int[]> queue, char target) {
+        while(!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int currX = curr[0];
+            int currY = curr[1];
+            
+            for (int i = 0; i < 4; i++) {
+                int nx = currX + dx[i];
+                int ny = currY + dy[i];
+                
+                if (nx < 0 || ny < 0 || nx >= m || ny >= n || maps[nx].charAt(ny) == 'X' || dist[nx][ny] >= 0) {
+                    continue;
+                }
+                
+                if (maps[nx].charAt(ny) == target) {
+                    return dist[currX][currY] + 1;
+                }
+                
+                queue.offer(new int[]{nx, ny});
+                dist[nx][ny] = dist[currX][currY] + 1;
+            }
+        }
+        
+        return 0;
+    }
+    
+    private void initDist(int[][] dist) {
+        for (int i = 0; i < m; i++) {
+            Arrays.fill(dist[i], -1);
         }
     }
 }
