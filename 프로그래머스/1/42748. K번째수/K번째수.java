@@ -1,21 +1,24 @@
 import java.util.*;
 
 class Solution {
-    
     public int[] solution(int[] array, int[][] commands) {
-        
         int[] answer = new int[commands.length];
         
-        for (int c = 0; c < commands.length; c++) {
-            int i = commands[c][0];
-            int j = commands[c][1];
-            int k = commands[c][2];
+        // 정렬하기 위한 배열
+        ArrayList<Integer> list = new ArrayList<>();
+        
+        for (int i = 0; i < commands.length; i++) {
+            int[] curr = commands[i];
             
-            int[] temp = Arrays.copyOfRange(array, i - 1, j);
+            for (int j = curr[0] - 1; j < curr[1]; j++) {
+                list.add(array[j]);
+            }
             
-            Arrays.sort(temp);
+            Collections.sort(list);
             
-            answer[c] = temp[k - 1];
+            answer[i] = list.get(curr[2] - 1);
+            
+            list.clear();
         }
         
         return answer;
