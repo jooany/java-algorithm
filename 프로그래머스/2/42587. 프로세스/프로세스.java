@@ -1,45 +1,46 @@
 import java.util.*;
-import java.util.stream.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-        HashMap<Integer, Integer> map = new HashMap<>();
+        int length = priorities.length;
+        int answer = 0;
         
-        for (int i = 0; i < priorities.length; i++) {
-            map.put(i, priorities[i]);
+        // {인덱스, 중요도}
+        Queue<int[]> queue = new ArrayDeque<>();
+        
+        for (int i = 0; i < length; i++) {
+            queue.offer(new int[]{i, priorities[i]});
         }
         
-        // Entry<인덱스, 중요도>
-        Deque<Map.Entry<Integer, Integer>> queue = map.entrySet()
-            .stream()
-            .collect(Collectors.toCollection(ArrayDeque<Map.Entry<Integer, Integer>>::new));
-        
-        int cnt = 0;
+        HashSet<Integer> indexes = new HashSet<>();
         
         while (!queue.isEmpty()) {
-            Map.Entry<Integer, Integer> curr = queue.poll();
+            int[] curr = queue.poll();
             
-            boolean hasGreaterThanCurr = false;
-            
-            for (int i = 0; i < queue.size(); i++) {
-                if (queue.peek().getValue() > curr.getValue()) {
-                    hasGreaterThanCurr = true;
-                }
+            boolean hasGreater = false;
+            for (int i = 0; i < length; i++) {
+                if (indexes.contains(i)) continue;
                 
-                queue.offer(queue.poll());
+                if (priorities[i] > curr[1]) {
+                    hasGreater = true;
+                    break;
+                }
             }
             
-            if (hasGreaterThanCurr) {
+            if (hasGreater) {
                 queue.offer(curr);
             } else {
-                cnt++;
+                answer++;
                 
-                if (curr.getKey() == location) {
-                    return cnt;
+                indexes.add(curr[0]);
+                
+                if (curr[0] == location) {
+                    return answer;
                 }
             }
         }
         
-        return cnt;
+        
+        return answer;
     }
 }
