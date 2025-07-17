@@ -2,37 +2,55 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] answers) {
-        int[] answerPatternOfFirst = new int[] {1,2,3,4,5};
-        int[] answerPatternOfSecond = new int[] {2,1,2,3,2,4,2,5};
-        int[] answerPatternOfThird = new int[] {3,3,1,1,2,2,4,4,5,5};
         
-        int[] markedAnswer = new int[3];
-        ArrayList<Integer> result = new ArrayList<>();
+        ArrayDeque<Integer> firstQ = new ArrayDeque<>(List.of(1,2,3,4,5));
+        ArrayDeque<Integer> secondQ = new ArrayDeque<>(List.of(2,1,2,3,2,4,2,5));
+        ArrayDeque<Integer> thirdQ = new ArrayDeque<>(List.of(3,3,1,1,2,2,4,4,5,5));
         
-        for (int i = 0; i < answers.length; i++) {
-            markAnswer(markedAnswer, answers, answerPatternOfFirst, i, 0);
-            markAnswer(markedAnswer, answers, answerPatternOfSecond, i, 1);
-            markAnswer(markedAnswer, answers, answerPatternOfThird, i, 2);
+        int[] cnts = new int[3];
+        
+        for (int answer : answers) {
+            if (firstQ.peek() == answer) {
+                cnts[0]++;
+            }
+            
+            firstQ.offer(firstQ.poll());
         }
         
-        Integer max = Arrays.stream(markedAnswer).max().orElse(1);        
-        for (int i = 0; i < markedAnswer.length; i++) {
-            if (max == markedAnswer[i]) {
-                result.add(i + 1);
+        for (int answer : answers) {
+            if (secondQ.peek() == answer) {
+                cnts[1]++;
+            }
+            
+            secondQ.offer(secondQ.poll());
+        }
+        
+        for (int answer : answers) {
+            if (thirdQ.peek() == answer) {
+                cnts[2]++;
+            }
+            
+            thirdQ.offer(thirdQ.poll());
+        }
+        
+        int max = 0;
+        
+        for (int i = 0; i < 3; i++) {
+            if (max < cnts[i]) {
+                max = cnts[i];
             }
         }
         
-        return result.stream()
-            .sorted()
-            .mapToInt(Integer::intValue)
-            .toArray();
-    }
-    
-    private void markAnswer(int[] markedAnswer, int[] answers, int[] answerPattern, int i, Integer key) {
-        if (answers[i] != answerPattern[i % answerPattern.length]) {
-            return;
+        ArrayList<Integer> answer = new ArrayList<>();
+        
+        for (int i = 0; i < 3; i++) {
+            if (max == cnts[i]) {
+                answer.add(i + 1);
+            }
         }
         
-        markedAnswer[key]++;
+        return answer.stream()
+            .mapToInt(Integer::intValue)
+            .toArray();
     }
 }
