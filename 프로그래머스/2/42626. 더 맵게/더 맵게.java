@@ -13,8 +13,7 @@ class Solution {
             return 0;
         }
         
-        // 만약 K보다 작아지지 않는다면, 무제한으로 돌게 된다.
-        while (!pq.isEmpty() && pq.peek() < K && pq.size() > 1) {
+        while (pq.size() > 1 && pq.peek() < K) {
             int min1 = pq.poll();
             int min2 = pq.poll();
             
