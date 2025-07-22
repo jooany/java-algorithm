@@ -1,30 +1,23 @@
 class Solution {
     private int answer;
-    private int[] nums;
-    private int targetNum;
-    private int length;
     
     public int solution(int[] numbers, int target) {
-        nums = numbers;
-        targetNum = target;
-        length = numbers.length;
-        
-        dfs(0, 0);
+        dfs(0, 0, numbers, target);
         
         return answer;
     }
     
-    private void dfs(int index, int total) {
-        if (length == index) {
+    private void dfs(int index, int total, int[] numbers, int target) {
+        if (numbers.length == index) {
 
-            if (total == targetNum) {
+            if (total == target) {
                 answer++;
             }
             
             return;
         }
         
-        dfs(index + 1, total + nums[index]);
-        dfs(index + 1, total + (-1) * nums[index]);
+        dfs(index + 1, total + numbers[index], numbers, target);
+        dfs(index + 1, total - numbers[index], numbers, target);
     }
 }
