@@ -1,39 +1,33 @@
 import java.util.*;
 
 class Solution {
-    int answer = Integer.MAX_VALUE;
-    
     public int solution(String begin, String target, String[] words) {
-        boolean[] visited = new boolean[words.length];
         
         if (!hasTarget(words, target)) {
             return 0;
         }
         
-        dfs(begin, 0, visited, begin, target, words);
+        int answer = Integer.MAX_VALUE;
+        boolean[] visited = new boolean[words.length];
+        ArrayDeque<Word> deque = new ArrayDeque<>();
+        deque.offer(new Word(begin, 0));
+        
+        while(!deque.isEmpty()) {
+            Word word = deque.poll();
+            
+            if (target.equals(word.curr)) {
+                return word.cnt;
+            }
+            
+            for (int i = 0; i < words.length; i++) {
+                if (visited[i] || !isOneAlphabetChange(word.curr, words[i])) continue;
+                
+                deque.offer(new Word(words[i], word.cnt + 1));
+                visited[i] = true;
+            }
+        }
         
         return answer == Integer.MAX_VALUE ? 0 : answer;
-    }
-    
-    private void dfs(String curr, int cnt, boolean[] visited, String begin, String target, String[] words) {
-        // 탐색 조건 1: 바꾼 횟수 < 바꿀 수 있는 단어 개수
-        if (cnt > words.length) return;
-        
-        if (curr.equals(target)) {
-            answer = Math.min(answer, cnt);
-        }
-        
-        for (int i = 0; i < words.length; i++) {
-            if (visited[i] || !isOneAlphabetChange(curr, words[i])) continue;
-            
-            visited[i] = true;
-            
-            dfs (words[i], cnt + 1, visited, begin, target, words);
-            
-            visited[i] = false;
-        }
-        
-        
     }
     
     private boolean hasTarget(String[] words, String target) {
@@ -58,5 +52,15 @@ class Solution {
         }
         
         return true;
+    }
+    
+    static class Word {
+        String curr;
+        int cnt;
+        
+        Word(String curr, int cnt) {
+            this.curr = curr;
+            this.cnt = cnt;
+        }
     }
 }
