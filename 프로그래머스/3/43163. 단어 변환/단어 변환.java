@@ -7,7 +7,7 @@ class Solution {
             return 0;
         }
         
-        int answer = Integer.MAX_VALUE;
+        int answer = 0;
         boolean[] visited = new boolean[words.length];
         ArrayDeque<Word> deque = new ArrayDeque<>();
         deque.offer(new Word(begin, 0));
@@ -27,7 +27,7 @@ class Solution {
             }
         }
         
-        return answer == Integer.MAX_VALUE ? 0 : answer;
+        return answer;
     }
     
     private boolean hasTarget(String[] words, String target) {
