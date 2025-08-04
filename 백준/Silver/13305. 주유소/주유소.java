@@ -20,13 +20,13 @@ public class Main{
         
         // 현재 도로 이전의 도시들에서 가장 기름값이 낮은 곳에서 충전하기
         // 기름값 최소 도시만큼 곱해서 더한다.
-        int result = 0;
+        long result = 0;
         int min = Integer.MAX_VALUE;
         
         for (int i = 0; i < distances.length; i++) {
             min = Math.min(min, oilPrices[i]);
             
-            result += distances[i] * min;
+            result += (long) distances[i] * min;
         }
         
         System.out.println(result);
