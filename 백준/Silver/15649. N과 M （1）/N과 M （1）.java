@@ -2,41 +2,39 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
+    static int n,m;
+    static boolean[] visited;
+    static StringBuilder sb = new StringBuilder();
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        boolean[] visited = new boolean[n + 1];
-        StringBuilder sb = new StringBuilder();
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        visited = new boolean[n + 1];
 
-        recursive(sb, 0, n, m, visited);
+        recursive(0, new int[m + 1]);
+        System.out.print(sb);
     }
     
-    public static void recursive(StringBuilder sb, int cnt, int n, int m, boolean[] visited) {
+    public static void recursive(int cnt, int[] result) {
+        if (cnt == m) {
+            for (int i = 1; i <= m; i++) {
+                sb.append(result[i]).append(i == m ? "\n" : " ");
+            }
+            return;
+        }
         
         for (int i = 1; i <= n; i++) {
             if (visited[i]) continue;
             
             visited[i] = true;
-            int length = sb.length();
             
-            if (length == 0) {
-                sb.append(i);
-            } else {
-               sb.append(" " + i);
-            }
-            
-            if (cnt + 1 == m) {
-                System.out.println(sb);
-            } else {
-                recursive(sb, cnt + 1, n, m, visited);
-            }
+            result[cnt + 1] = i;
+            recursive(cnt + 1, result);
             
             visited[i] = false;
-            sb.setLength(length);
         }
-        
     }
 }
