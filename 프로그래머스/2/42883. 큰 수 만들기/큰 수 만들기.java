@@ -3,23 +3,29 @@ import java.util.*;
 class Solution {
     public String solution(String number, int k) {
         Deque<Character> stack = new ArrayDeque<>();
-        char[] numbers = number.toCharArray();
-
-        for (int i = 0; i < numbers.length; i++) {
-            while(!stack.isEmpty() && k != 0 && stack.peek() < numbers[i]) {
-                stack.pop();
+        char[] nums = number.toCharArray();
+        
+        for (char c : number.toCharArray()) {
+            while (k > 0 && !stack.isEmpty() && stack.peekLast() < c) {
+                stack.pollLast();
                 k--;
             }
             
-            stack.push(numbers[i]);
+            stack.offerLast(c);
+        }
+        
+        if (k > 0) {
+            for (int i = 0; i < k; i++) {
+                stack.pollLast();
+            }
         }
         
         StringBuilder sb = new StringBuilder();
         
         while (!stack.isEmpty()) {
-            sb.append(stack.pollLast());
+            sb.append(String.valueOf(stack.pollFirst()));
         }
         
-        return k > 0 ? sb.substring(0, sb.length() - k) : sb.toString();
+        return sb.toString();
     }
 }
