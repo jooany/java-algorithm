@@ -1,23 +1,27 @@
 class Solution {
-    private int answer;
+    static int[] nums;
+    static int targetNum;
+    int answer = 0;
     
+    // DFS 풀이
     public int solution(int[] numbers, int target) {
-        dfs(0, 0, numbers, target);
+        nums = numbers;
+        targetNum = target;
+        
+        dfs(0, 0);
         
         return answer;
     }
     
-    private void dfs(int index, int total, int[] numbers, int target) {
-        if (numbers.length == index) {
-
-            if (total == target) {
-                answer++;
-            }
+    private void dfs(int i, int result) {
+        if (i == nums.length) {
+            if (result == targetNum) answer++;
             
             return;
         }
         
-        dfs(index + 1, total + numbers[index], numbers, target);
-        dfs(index + 1, total - numbers[index], numbers, target);
+        dfs(i + 1, result + nums[i]);
+        dfs(i + 1, result - nums[i]);
     }
+    
 }
