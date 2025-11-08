@@ -2,26 +2,26 @@ import java.util.*;
 
 class Solution {
     public int solution(String name) {
-        int n = name.length();
-        int answer = n - 1;
+        int answer = 0;
         
-        // 커서 이동
-        for (int i = 0; i < n; i++) {
-            int next = i + 1;
-            
-            while (next < n && name.charAt(next) == 'A') {
-                next++;
-            }
-            
-            answer = Math.min(answer, 2*i + n - next);
-            answer = Math.min(answer, i + 2*(n - next));
-        }
-        
-        // 알파벳 고르기
         for (char c : name.toCharArray()) {
             answer += Math.min(c - 'A', 'Z' - c + 1);
         }
         
-        return answer;
+        int min = name.length() - 1;
+        
+        for (int i = 0; i < name.length() - 1; i++) {
+            int endA = i + 1;
+            
+            while (endA < name.length() && name.charAt(endA) == 'A') {
+                endA++;
+            }
+            
+            min = Math.min(min, 
+                           Math.min(2 * i + name.length() - endA, i + 2 * (name.length() - endA))
+                           );
+        }
+        
+        return answer + min;
     }
 }
