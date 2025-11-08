@@ -2,30 +2,22 @@ import java.util.*;
 
 class Solution {
     public String solution(String number, int k) {
-        Deque<Character> stack = new ArrayDeque<>();
-        char[] nums = number.toCharArray();
-        
+        StringBuilder sb = new StringBuilder(); // 스택처럼 사용
+        int remain = k;
+
         for (char c : number.toCharArray()) {
-            while (k > 0 && !stack.isEmpty() && stack.peekLast() < c) {
-                stack.pollLast();
-                k--;
+            while (remain > 0 && sb.length() > 0 && sb.charAt(sb.length() - 1) < c) {
+                sb.deleteCharAt(sb.length() - 1);
+                remain--;
             }
-            
-            stack.offerLast(c);
+            sb.append(c);
         }
-        
-        if (k > 0) {
-            for (int i = 0; i < k; i++) {
-                stack.pollLast();
-            }
+
+        // 제거가 남아있으면 뒤에서부터 제거
+        if (remain > 0) {
+            sb.setLength(sb.length() - remain);
         }
-        
-        StringBuilder sb = new StringBuilder();
-        
-        while (!stack.isEmpty()) {
-            sb.append(String.valueOf(stack.pollFirst()));
-        }
-        
+
         return sb.toString();
     }
 }
