@@ -1,29 +1,40 @@
+import java.util.*;
+
 class Solution {
     int answer = 0;
     
     public int solution(int n, int[][] computers) {
+        List<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) graph[i] = new ArrayList<>();
+        
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j && computers[i][j] == 1) {
+                    graph[i].add(j);
+                }
+            }
+        }
+        
         boolean[] visited = new boolean[n];
         
         for (int i = 0; i < n; i++) {
-            // i 노드를 방문하지 않았다면, 네트워크 + 1 하고 방문 표시한다.
-            // i 노드부터 computers & DFS를 활용하여 연결된 것을 모두 탐색하고 방문 표시한다. (양방향 주의)
-            
-            if (visited[i]) continue;
-
-            answer++;
-            dfs(i, visited, computers);
+            dfs(i, graph, visited);
         }
         
         return answer;
     }
     
-    public void dfs(int i, boolean[] visited, int[][] computers) {
-        visited[i] = true;
+    private void dfs(int curr, List<Integer>[] graph, boolean[] visited) {
+        if (!visited[curr]) answer++;
         
-        for (int j = 0; j < computers.length; j++) {
-            if (!visited[j] && computers[i][j] == 1) {
-                dfs(j, visited, computers);
-            }
+        visited[curr] = true;
+        
+        for (Integer next : graph[curr]) {
+            if (visited[next]) continue;
+            
+            visited[next] = true;
+
+            dfs(next, graph, visited);
         }
     }
 }
