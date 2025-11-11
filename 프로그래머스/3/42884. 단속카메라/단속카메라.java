@@ -2,21 +2,21 @@ import java.util.*;
 
 class Solution {
     public int solution(int[][] routes) {
+        Arrays.sort(routes, (a, b) -> a[1] - b[1]);
         
-        Arrays.sort(routes, (a, b) -> {
-            return a[1] - b[1];
-        });
-        
-        int end = -30001;
         int answer = 0;
+        int cameraPos = -30001;
         
         for (int[] route : routes) {
-            if (route[0] <= end) continue;
+            int start = route[0];
+            int end = route[1];
             
-            answer++;
-            end = route[1];
+            if (cameraPos < start) {
+                answer++;
+                cameraPos = end;
+            }
         }
         
         return answer;
     }
-}
+}   
