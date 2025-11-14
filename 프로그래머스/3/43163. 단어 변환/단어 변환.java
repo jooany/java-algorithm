@@ -2,64 +2,56 @@ import java.util.*;
 
 class Solution {
     public int solution(String begin, String target, String[] words) {
+        int answer = 0;
+
+        // 종료 : words에 target이 없으면 return 0
         
-        if (!hasTarget(words, target)) {
+        // begin 알파벳과 한개의 알파벳만 다른 알파벳을 찾아서 큐에 넣는다.
+        // 큐 추출, 한개의 알파벳만 다른 알파벳을 찾아서 큐에 넣는다.
+        // O(N^2) = 3 * 50 * 50
+        
+        HashSet<String> wordSet = new HashSet<>();
+        for (String w : words) {
+            wordSet.add(w);
+        }
+        
+        if (!wordSet.contains(target)) {
             return 0;
         }
         
-        int answer = 0;
-        boolean[] visited = new boolean[words.length];
-        ArrayDeque<Word> deque = new ArrayDeque<>();
-        deque.offer(new Word(begin, 0));
+        Deque<Word> q = new ArrayDeque<>();
+        q.offer(new Word(begin, 0));
         
-        while(!deque.isEmpty()) {
-            Word word = deque.poll();
+        while(!q.isEmpty()) {
+            Word curr = q.poll();
             
-            if (target.equals(word.curr)) {
-                return word.cnt;
+            if (target.equals(curr.word)) {
+                return curr.cnt;
             }
             
-            for (int i = 0; i < words.length; i++) {
-                if (visited[i] || !isOneAlphabetChange(word.curr, words[i])) continue;
+            for (String word : wordSet) {
+                int diff = 0;
                 
-                deque.offer(new Word(words[i], word.cnt + 1));
-                visited[i] = true;
+                for (int i = 0; i < begin.length(); i++) {
+                    if (word.charAt(i) != curr.word.charAt(i)) diff++;
+                }
+                
+                if (diff != 1) continue;
+                
+                q.offer(new Word(word, curr.cnt + 1));
             }
         }
         
-        return answer;
+        
+        return 0;
     }
     
-    private boolean hasTarget(String[] words, String target) {
-        for (String word : words) {
-            if (target.equals(word)) return true;
-        }
-        
-        return false;
-    } 
-    
-    private boolean isOneAlphabetChange(String curr, String toChange) {
-        int diff = 0;
-        
-        for (int i = 0; i < curr.length(); i++) {
-            if (curr.charAt(i) != toChange.charAt(i)) {
-                diff++;
-            }
-        }
-        
-        if (diff != 1) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    static class Word {
-        String curr;
+    private static class Word {
+        String word;
         int cnt;
         
-        Word(String curr, int cnt) {
-            this.curr = curr;
+        Word(String word, int cnt) {
+            this.word = word; 
             this.cnt = cnt;
         }
     }
