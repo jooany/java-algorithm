@@ -2,21 +2,34 @@ import java.util.*;
 
 class Solution {
     public String solution(String[] participant, String[] completion) {
+        String answer = "";
         
-        Map<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> map = new HashMap<>();
+        for (String p : participant) {
+            if (map.containsKey(p)) {
+                map.put(p, map.get(p) + 1);
+            } else {
+                map.put(p, 1);
+            }
+        }
         
         for (String c : completion) {
-            map.put(c, map.getOrDefault(c, 0) + 1);
-        }
-        
-        for (String p : participant) {
-            if (map.getOrDefault(p, 0) == 0) {
-                return p;   
-            }
             
-            map.put(p, map.get(p) - 1);
+            if (map.containsKey(c)) {
+                int cnt = map.get(c);
+                
+                if (cnt == 1) {
+                    map.remove(c);
+                } else {
+                    map.put(c, cnt - 1);
+                }
+            }
         }
         
-        return null;
+        return map.entrySet()
+            .stream()
+            .map((e) -> e.getKey())
+            .findFirst()
+            .orElse(null);
     }
 }
